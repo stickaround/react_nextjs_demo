@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 
-import { AuthResponse, LoginPayload, Post, PostPayload } from '../types';
+import { AuthResponse, UserPayload, Post, PostPayload, User } from '../types';
 
 const guestAPI = axios.create({
   baseURL: process.env.API_URL ?? 'http://localhost:3000',
@@ -16,14 +16,14 @@ export const setBearerHeader = (window: Window) => {
   }`;
 };
 
-export const login = (payload: LoginPayload) =>
-  guestAPI.post<LoginPayload, AxiosResponse<AuthResponse>>(
+export const login = (payload: UserPayload) =>
+  guestAPI.post<UserPayload, AxiosResponse<AuthResponse>>(
     '/auth/login',
     payload
   );
 
-export const register = (payload: LoginPayload) =>
-  guestAPI.post<LoginPayload, AxiosResponse<AuthResponse>>(
+export const register = (payload: UserPayload) =>
+  guestAPI.post<UserPayload, AxiosResponse<AuthResponse>>(
     '/auth/register',
     payload
   );
@@ -43,3 +43,23 @@ export const updatePost = (id: string, payload: PostPayload) =>
 
 export const deletePost = (id: string) =>
   authenticatedAPI.delete<AxiosResponse<Post>>(`/post/${id}`);
+
+export const getUsers = () => authenticatedAPI.get<User[]>('/admin/users');
+
+export const getUser = (id: string) =>
+  authenticatedAPI.get<User>(`/admin/users/${id}`);
+
+export const createUser = (payload: UserPayload) =>
+  authenticatedAPI.post<PostPayload, AxiosResponse<User>>(
+    '/admin/users',
+    payload
+  );
+
+export const updateUser = (id: string, payload: UserPayload) =>
+  authenticatedAPI.patch<UserPayload, AxiosResponse<User>>(
+    `/admin/users/${id}`,
+    payload
+  );
+
+export const deleteUser = (id: string) =>
+  authenticatedAPI.delete<AxiosResponse<User>>(`/admin/users/${id}`);

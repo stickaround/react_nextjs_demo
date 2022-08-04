@@ -17,29 +17,29 @@ import { toast } from 'react-toast';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-import { Post } from '../../types';
-import { getPosts, deletePost } from '../../services/api';
+import { User } from '../../../types';
+import { getUsers, deleteUser } from '../../../services/api';
 
-function PostList() {
-  const [posts, setPosts] = React.useState<Post[]>([]);
+function UserList() {
+  const [users, setUsers] = React.useState<User[]>([]);
 
   React.useEffect(() => {
-    getPosts().then((res) => {
-      setPosts(res.data);
+    getUsers().then((res) => {
+      setUsers(res.data);
     });
   }, []);
 
   function handleDelete(id: string = '') {
     confirmAlert({
-      title: 'Are you sure to delete this post?',
+      title: 'Are you sure to delete this user?',
       buttons: [
         {
           label: 'OK',
           onClick: () => {
-            deletePost(id).then((res) => {
+            deleteUser(id).then((res) => {
               toast.success('Successfully deleted!');
-              getPosts().then((res) => {
-                setPosts(res.data);
+              getUsers().then((res) => {
+                setUsers(res.data);
               });
             });
           },
@@ -54,7 +54,7 @@ function PostList() {
   return (
     <Container component={Paper} sx={{ m: 5 }}>
       <div style={{ textAlign: 'right' }}>
-        <Link href='/posts/create'>
+        <Link href='/admin/users/create'>
           <Button color='secondary' variant='contained'>
             Create New!
           </Button>
@@ -64,26 +64,28 @@ function PostList() {
         <TableHead>
           <TableRow>
             <TableCell>No</TableCell>
-            <TableCell>Title</TableCell>
-            <TableCell>Content</TableCell>
+            <TableCell>Username</TableCell>
+            <TableCell>Role</TableCell>
+            <TableCell>Status</TableCell>
             <TableCell>...</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {posts.map((item, index: number) => (
-            <TableRow key={item.id}>
+          {users.map((user, index: number) => (
+            <TableRow key={user.id}>
               <TableCell>{index + 1}</TableCell>
-              <TableCell>{item.title}</TableCell>
-              <TableCell>{item.content}</TableCell>
+              <TableCell>{user.username}</TableCell>
+              <TableCell>{user.role}</TableCell>
+              <TableCell>{user.status}</TableCell>
               <TableCell>
-                <Link href={`posts/${item.id}`}>
+                <Link href={`users/${user.id}`}>
                   <IconButton aria-label='edit'>
                     <EditIcon />
                   </IconButton>
                 </Link>
                 <IconButton
                   aria-label='delete'
-                  onClick={() => handleDelete(item.id)}
+                  onClick={() => handleDelete(user.id)}
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -96,4 +98,4 @@ function PostList() {
   );
 }
 
-export default PostList;
+export default UserList;
