@@ -16,6 +16,10 @@ export const setBearerHeader = (window: Window) => {
   }`;
 };
 
+export const clearBearerHeader = (window: Window) => {
+  authenticatedAPI.defaults.headers.common['Authorization'] = '';
+};
+
 export const login = (payload: UserPayload) =>
   guestAPI.post<UserPayload, AxiosResponse<AuthResponse>>(
     '/auth/login',
@@ -27,6 +31,8 @@ export const register = (payload: UserPayload) =>
     '/auth/register',
     payload
   );
+
+export const getProfile = () => authenticatedAPI.get<User>('/auth/profile');
 
 export const getPosts = () => authenticatedAPI.get<Post[]>('/post');
 

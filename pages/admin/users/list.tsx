@@ -36,12 +36,16 @@ function UserList() {
         {
           label: 'OK',
           onClick: () => {
-            deleteUser(id).then((res) => {
-              toast.success('Successfully deleted!');
-              getUsers().then((res) => {
-                setUsers(res.data);
+            deleteUser(id)
+              .then((res) => {
+                toast.success('Successfully deleted!');
+                getUsers().then((res) => {
+                  setUsers(res.data);
+                });
+              })
+              .catch((res) => {
+                toast.error(res?.response?.data?.message);
               });
-            });
           },
         },
         {
