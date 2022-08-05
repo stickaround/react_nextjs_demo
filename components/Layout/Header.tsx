@@ -18,47 +18,58 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
+import { useAuthProvider } from '../../contexts/auth/AuthProvider';
+import { clearBearerHeader } from '../../services/api';
+
 const guestItems = [
   {
     label: 'Login',
-    path: 'login',
+    path: '/login',
   },
   {
     label: 'register',
-    path: 'register',
+    path: '/register',
   },
 ];
 
 const userItems = [
   {
     label: 'Post',
-    path: 'posts',
+    path: '/posts',
   },
 ];
 
 const adminItems = [
   {
     label: 'User',
-    path: 'users',
+    path: '/admin/users',
   },
   {
     label: 'Post',
-    path: 'posts',
+    path: '/posts',
   },
 ];
 
 function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [navItems, setNavItems] = React.useState<
+    { label: string; path: string }[]
+  >([]);
   const router = useRouter();
-  const mode = 'guest';
+  const { user, setUser } = useAuthProvider();
 
-  const navItems =
-    mode === 'guest'
-      ? [...guestItems]
-      : mode === 'admin'
-      ? [...adminItems]
-      : [...userItems];
+  React.useEffect(() => {
+    if (!user) {
+      setNavItems([...guestItems]);
+    } else if (user) {
+      if (user.role === 'admin') {
+        setNavItems([...adminItems]);
+      } else {
+        setNavItems([...userItems]);
+      }
+    }
+  }, [user]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -74,8 +85,10 @@ function Header() {
 
   const handleLogout = () => {
     localStorage.setItem('token', '');
+    clearBearerHeader(window);
+    setUser(null);
     setAnchorEl(null);
-    router.push('/');
+    router.push('/login');
   };
 
   const drawer = (
@@ -100,7 +113,7 @@ function Header() {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <AppBar component='nav' sx={{ zIndex: -1 }}>
+      <AppBar component='nav' sx={{ zIndex: 0 }}>
         <Toolbar>
           <IconButton
             color='inherit'
@@ -123,7 +136,7 @@ function Header() {
           <Box
             sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center' }}
           >
-            {guestItems.map((item) => (
+            {navItems.map((item) => (
               <Link
                 key={item.label}
                 href={item.path}
@@ -134,7 +147,7 @@ function Header() {
                 </Button>
               </Link>
             ))}
-            {/* {(mode === 'user' || mode === 'admin') && (
+            {(user?.role === 'user' || user?.role === 'admin') && (
               <div>
                 <IconButton
                   size='large'
@@ -164,7 +177,7 @@ function Header() {
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
               </div>
-            )} */}
+            )}
           </Box>
         </Toolbar>
       </AppBar>

@@ -47,76 +47,70 @@ function Register() {
   });
 
   return (
-    <Layout>
-      <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Card sx={{ width: 500, m: '100px' }}>
-          <CardContent>
-            <Typography
-              gutterBottom
-              variant='h5'
+    <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Card sx={{ width: 500, m: '100px' }}>
+        <CardContent>
+          <Typography
+            gutterBottom
+            variant='h5'
+            component='div'
+            sx={{ textAlign: 'center' }}
+          >
+            REGISTER
+          </Typography>
+          <Box component='form' onSubmit={userData.handleSubmit}>
+            <FormControl fullWidth sx={{ m: 1 }}>
+              <TextField
+                id='username'
+                label='Username'
+                name='username'
+                variant='standard'
+                error={!!userData.errors.username && userData.touched.username}
+                helperText={
+                  userData.touched.username && userData.errors.username
+                }
+                onChange={userData.handleChange}
+                value={userData.values.username}
+              />
+            </FormControl>
+            <FormControl fullWidth sx={{ m: 1 }}>
+              <TextField
+                id='password'
+                label='Password'
+                variant='standard'
+                name='password'
+                type='password'
+                error={!!userData.errors.password && userData.touched.password}
+                helperText={
+                  userData.touched.password && userData.errors.password
+                }
+                onChange={userData.handleChange}
+                value={userData.values.password}
+              />
+            </FormControl>
+            <Box
               component='div'
-              sx={{ textAlign: 'center' }}
+              sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}
             >
-              REGISTER
-            </Typography>
-            <Box component='form' onSubmit={userData.handleSubmit}>
-              <FormControl fullWidth sx={{ m: 1 }}>
-                <TextField
-                  id='username'
-                  label='Username'
-                  name='username'
-                  variant='standard'
-                  error={
-                    !!userData.errors.username && userData.touched.username
-                  }
-                  helperText={
-                    userData.touched.username && userData.errors.username
-                  }
-                  onChange={userData.handleChange}
-                  value={userData.values.username}
-                />
-              </FormControl>
-              <FormControl fullWidth sx={{ m: 1 }}>
-                <TextField
-                  id='password'
-                  label='Password'
-                  variant='standard'
-                  name='password'
-                  type='password'
-                  error={
-                    !!userData.errors.password && userData.touched.password
-                  }
-                  helperText={
-                    userData.touched.password && userData.errors.password
-                  }
-                  onChange={userData.handleChange}
-                  value={userData.values.password}
-                />
-              </FormControl>
-              <Box
-                component='div'
-                sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}
+              <Button
+                size='small'
+                color='primary'
+                variant='contained'
+                type='submit'
+                sx={{ mr: 1 }}
               >
-                <Button
-                  size='small'
-                  color='primary'
-                  variant='contained'
-                  type='submit'
-                  sx={{ mr: 1 }}
-                >
-                  Register
+                Register
+              </Button>
+              <Link href='/login'>
+                <Button size='small' color='info' variant='contained'>
+                  Login
                 </Button>
-                <Link href='/login'>
-                  <Button size='small' color='info' variant='contained'>
-                    Login
-                  </Button>
-                </Link>
-              </Box>
+              </Link>
             </Box>
-          </CardContent>
-        </Card>
-      </Container>
-    </Layout>
+          </Box>
+        </CardContent>
+      </Card>
+    </Container>
   );
 }
 
